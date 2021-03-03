@@ -14,4 +14,4 @@ After downloading(cloning) repo type this in command shell
     python app.py
 Then open http://127.0.0.1:5000/ in your browser.
 
-![screenshot](./pictures/image.png)
+![screenshot](screen.PNG)
