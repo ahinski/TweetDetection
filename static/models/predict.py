@@ -1,5 +1,4 @@
 import nltk
-import spacy
 import re
 import pickle
 import os
@@ -17,7 +16,7 @@ class App():
     calculate() returns probability in json form {probability: result}
     '''
     def __init__(self, tweet):
-        self.text = Text(tweet)
+        self.text = Text(tweet.tweet)
 
     def calculate(self):
         'Calculates the probability of tweet being real about disaster and return JSON'
