@@ -1,7 +1,7 @@
 # Tweet Detection Deployment
 Returns a probability of tweet being about a real disaster.
 
-Used dataset - 
+Used dataset - https://www.kaggle.com/c/nlp-getting-started/overview
 
 Research notebook - https://github.com/ahinski/portfolio/blob/main/disaster_tweets.ipynb
 
