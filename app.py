@@ -1,4 +1,3 @@
-import numpy as np
 from flask import Flask, request, jsonify, render_template
 from static.models.predict import App
 
@@ -13,8 +12,6 @@ def predict():
     text = [request.form['tweet_text']][0]
     predict = App(text)
     probability = predict.calculate()
-    print('here is is')
-    print(probability)
     return render_template('index.html', prediction='Probability of tweet being about real disaster is {}'.format(probability))
 
 if __name__ == "__main__":
