@@ -8,9 +8,7 @@ Research notebook - https://github.com/ahinski/portfolio/blob/main/disaster_twee
 ## How to launch
 After downloading(cloning) repo type this in command shell
 
-    env/Scripts/activate (for Windows)
-    source env/Scripts/activate (for Bash/Linux)
-    
+    pip -m install -r requirements.txt    
     python app.py
 Then open http://127.0.0.1:5000/ in your browser.
 
