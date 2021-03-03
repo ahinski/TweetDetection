@@ -11,7 +11,7 @@
  <div class="main">
 	<h1>Disaster Tweet Detection</h1>
     <form action="/predict" method="post">
-        <textarea type="text" name="tweet_text" class="main-textarea" placeholder="Type a tweet..." required="required"></textarea>
+        <textarea type="text" name="tweet_text" class="main-textarea" placeholder="Type a tweet..." required="required">{{ text }}</textarea>
         <button type="submit" class="main-button">Calculate the probability</button>
     </form>
     {{ prediction }}
