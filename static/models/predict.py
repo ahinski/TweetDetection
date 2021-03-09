@@ -3,8 +3,8 @@ import re
 import pickle
 import os
 import math
-from flask import jsonify
-
+import string
+import numpy as np
 
 class App():
     ''' Class for API application 'Probability of Disaster Tweet'
@@ -20,14 +20,9 @@ class App():
 
     def calculate(self):
         'Calculates the probability of tweet being real about disaster and return JSON'
-        clf_LogReg = pickle.load(open('static/models/LogReg_model.sav', 'rb'))
-        clf_RF = pickle.load(open('static/models/RF_model.sav', 'rb'))
-        clf_NB = pickle.load(open('static/models/NB_model.sav', 'rb'))
+        clf_ensamble = pickle.load(open('static/models/ens_model.sav', 'rb'))
         text = self.text.preprocess()
-        predict_LogReg = clf_LogReg.predict_proba(text)[:, 1]
-        predict_RF= clf_RF.predict_proba(text)[:, 1]
-        predict_NB = clf_NB.predict_proba(text)[:, 1]
-        result = math.floor(((predict_LogReg + predict_RF + predict_NB) / 3)[0] * 100) / 100
+        result = math.floor(clf_ensamble.predict_proba(text)[0, 1] * 100) / 100
         return result
 
 class Text():
@@ -53,6 +48,8 @@ class Text():
     def preprocess(self):
         'Preprocesses text for fitting in ML model'
         if (self.__preprocessed == False):
+            features = self.__meta_features()
+
             # lowercase
             self.text = self.text.lower()
 
@@ -67,14 +64,29 @@ class Text():
             # lemmatizing text
             self.text = self.__lemmatize()
 
-            # removing stopwords
-            all_stopwords = set(nltk.corpus.stopwords.words('english'))
-            self.text = ' '.join([word for word in self.text.split() if word not in (all_stopwords)])
-
-            # removing words with numbers and letters along
-            self.text = ' '.join(w for w in self.text.split() if not any(j.isdigit() for j in w))
+            # vectorizing text
             vect = pickle.load(open('static/models/vectorizer.sav', 'rb'))
             self.text = vect.transform([self.text])
             self.text = self.text.todense()
+
+            # concatenating meta_features and word-vector
+            self.text = np.concatenate((self.text, features), axis=1)
             self.__preprocessed = True
         return self.text
+
+    def __meta_features(self):
+        'Extracts meta features from text'
+        #Mentions count
+        if self.text.count('@'): mentions_count = 1
+        else: mentions_count = 0
+
+        #Links count
+        if self.text.count('http'): links_count = 1
+        else: links_count = 0
+
+        #Punctuation count
+        count = lambda l1,l2: sum([1 for x in l1 if x in l2])
+        punct_count = count(self.text, string.punctuation)
+
+        features = np.array([mentions_count, links_count, punct_count])
+        return features.reshape(1, 3)
